@@ -1,5 +1,7 @@
 module Aell
 
+include("dsl.jl")
+
 import REPL.LineEdit
 import REPL.Terminals
 
@@ -37,4 +39,4 @@ end
 
 end
 
-Aell.run()
+#Aell.run()
