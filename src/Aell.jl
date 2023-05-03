@@ -6,17 +6,20 @@ import REPL.LineEdit
 import REPL.Terminals
 
 function run()
-    function my_callback(a)
-        #println()
-        #println("honk")
-        true
+
+    state = DSL.DSLState([])
+
+    function my_callback(s)
+        line = String(take!(copy(LineEdit.buffer(s))))
+        tokens = DSL.tokenize(line)
+        tokens[end].complete
     end
 
     myprompt = Nothing
 
     function do_respond(s, buf, ok::Bool)
         line = String(take!(buf)::Vector{UInt8})
-        result = DSL.eval(line)
+        result = DSL.eval(state, line)
         display(result)
     end
 

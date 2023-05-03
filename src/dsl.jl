@@ -104,29 +104,35 @@ function tokenize(text::String)::Vector{Token}
     return tokens
 end
 
+using Random
+
+struct DSLState
+    stack::Vector{Any}
+end
+
 """
     eval(text)
 
 Evaluate an Aell string
 """
-function eval(text::String)
+function eval(state::DSLState, text::String)
     tokens = tokenize(text)
-    eval(tokens)
+    eval(state, tokens)
 end
 
-using Random
+
 
 """
     eval(tokens)
 
 Evaluate an array of tokens. Returns the value at the top of the stack.
 """
-function eval(tokens::Vector{Token})::Any
+function eval(state::DSLState, tokens::Vector{Token})::Any
     # This works basically like a stack machine, or a forth interpreter.
     # Except we know the methods of functions so we can actually know how many
     # arguments to pop off the stack.
 
-    stack = []
+    stack = state.stack
     for token in tokens
         token_text = token.token
         if token.type == LITERAL
