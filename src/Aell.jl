@@ -16,19 +16,18 @@ function run()
 
     function do_respond(s, buf, ok::Bool)
         line = String(take!(buf)::Vector{UInt8})
-        println("line: ", line)
-        if line[1] == '/'
-            rest = line[2:end]
-            myprompt.prompt = "$rest\$ "
-            println(myprompt)
-        end
+        result = DSL.eval(line)
+        display(result)
     end
 
 
     term_env = get(ENV, "TERM", @static Sys.iswindows() ? "" : "dumb")
     term = Terminals.TTYTerminal(term_env, stdin, stdout, stderr)
 
-    myprompt = LineEdit.Prompt("aell\$ "; prompt_prefix=Base.text_colors[:light_magenta], prompt_suffix=Base.text_colors[:normal], on_enter=my_callback, on_done=do_respond)
+    myprompt = LineEdit.Prompt("aell\$ ";
+        prompt_prefix=Base.text_colors[:light_magenta],
+        prompt_suffix=Base.text_colors[:normal],
+        on_enter=my_callback, on_done=do_respond)
 
     modes = LineEdit.TextInterface[myprompt]
 
@@ -39,4 +38,4 @@ end
 
 end
 
-#Aell.run()
+Aell.run()
