@@ -165,8 +165,10 @@ function eval(tokens::Vector{Token})::Any
             if length(stack) < num_args
                 continue
             end
-            args = map(x -> x[2], stack[end-num_args+1:end])
-            identifiers = map(x -> x[1], stack[end-num_args+1:end])
+            relevant = stack[end-num_args+1:end]
+            relevant = reverse(relevant)
+            args = map(x -> x[2], relevant)
+            identifiers = map(x -> x[1], relevant)
             args_tuple = Tuple(args)
             args_tuple_type = typeof(args_tuple)
             # Get the methods that match the arguments
